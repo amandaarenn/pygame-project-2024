@@ -11,7 +11,7 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 GRAY = (128, 128, 128)
 
-WIDTH = 1280  # Pixels
+WIDTH = 1280  
 HEIGHT = 720
 SCREEN_SIZE = (WIDTH, HEIGHT)
 
@@ -23,9 +23,8 @@ class Player(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
-        #  load img
+        
         SNOWMAN_IMAGE = pg.image.load("./Images/snowman.webp")
-            # scale img
         SNOWMAN_IMAGE = pg.transform.scale(
             SNOWMAN_IMAGE, (SNOWMAN_IMAGE.get_width() // 4, SNOWMAN_IMAGE.get_height() // 4))    
     
@@ -49,7 +48,6 @@ class Bullet(pg.sprite.Sprite):
         """
         super().__init__()
 
-        # Shooting Snowballs
         self.image = pg.image.load("./Images/snowball.png") 
 
         self.image = pg.transform.scale(
@@ -57,16 +55,14 @@ class Bullet(pg.sprite.Sprite):
     
         self.rect = self.image.get_rect()
 
-        # Spawn at the Player
         self.rect.centerx = player_loc[0]
         self.rect.top = player_loc[1]
 
-        self.vel_x = -3  # move up
+        self.vel_x = -3 
 
     def update(self):
         self.rect.x += self.vel_x
 
-        # Kill the bullet if it leaves the screen
         if self.rect.right < 0:
             self.kill()
 
@@ -79,9 +75,8 @@ class Goat(pg.sprite.Sprite):
         """
         super().__init__()
 
-         #  load img
+      
         ENEMY_IMAGE = pg.image.load("./Images/goat.png")
-            # scale img
         ENEMY_IMAGE = pg.transform.scale(
             ENEMY_IMAGE, (ENEMY_IMAGE.get_width() // 10, ENEMY_IMAGE.get_height() // 10))    
 
@@ -94,10 +89,9 @@ class Goat(pg.sprite.Sprite):
         self.vel_y = 2
 
     def update(self):
-        # Movement
+        
         self.rect.y += self.vel_y
 
-        # Bounce in the y-axis
         if self.rect.bottom > HEIGHT:
             self.rect.bottom = HEIGHT
             self.vel_y *= -1
@@ -110,7 +104,6 @@ def start():
     pg.init()
     pg.mouse.set_visible(False)
 
-    # --Game State Variables--
     screen = pg.display.set_mode(SCREEN_SIZE)
     done = False
     clock = pg.time.Clock()
@@ -122,16 +115,15 @@ def start():
 
     font = pg.font.SysFont("Apple Chancery", 24)
 
-    # All sprites go in this sprite Group
     all_sprites = pg.sprite.Group()
 
-    # Goat sprites
+
     enemy_sprites = pg.sprite.Group()
 
-    # Sprite list for bullets
+
     bullet_sprites = pg.sprite.Group()
 
-    #Create a player and store it in a variable
+   
     player = Player ()
     all_sprites.add(player)
 
@@ -157,7 +149,7 @@ def start():
 
         all_sprites.update()
 
-        # Collision between bullets and enemies
+
         for bullet in bullet_sprites:
             enemies_hit = pg.sprite.spritecollide(bullet, enemy_sprites, False)
                 
@@ -173,30 +165,28 @@ def start():
                 enemy = Goat(random_x, random_y)
                 all_sprites.add(enemy)
                 enemy_sprites.add(enemy)    
-        # --- Draw items
+       
         screen.blit(bg, (0, 0))
 
         all_sprites.draw(screen)
         enemy_sprites.draw(screen)
 
-         # TODO: detect collisions with enemies
         enemies_collided = pg.sprite.spritecollide(
             player, 
             enemy_sprites, 
             False
         )
 
-        # Create an image that has the score in it
+       
         score_image = font.render(f"Score: {score}", True, WHITE)
         
-        # Draw/blit the image on the screen
+
         screen.blit(score_image, (5,5))
 
-        # Update the screen with anything new
+        
         pg.display.flip()
 
 
-        # --- Tick the Clock
         clock.tick(10000000000000)  # 60 fps
 
     pg.quit()
